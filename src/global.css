@@ -1,0 +1,7 @@
+/* scrollbar */
+@import 'simplebar-react/dist/simplebar.min.css';
+
+@font-face {
+    font-family: 'IRANSANS';
+    src: local('IRANSANS'), url(fonts/woff2/IRANSansXFaNum-Medium.woff2) format('woff2');
+  }

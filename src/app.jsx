@@ -12,14 +12,13 @@ import { useState } from 'react';
 
 export default function App() {
   useScrollToTop();
-      const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
-            <QueryClientProvider client={queryClient}>
-      <ThemeProvider >
-      <Router />
-    </ThemeProvider>
-            </QueryClientProvider>
-    
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <Router />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

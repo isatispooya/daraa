@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <HelmetProvider>
     <BrowserRouter>
-      <Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
         <App />
       </Suspense>
     </BrowserRouter>

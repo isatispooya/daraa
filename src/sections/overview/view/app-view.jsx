@@ -45,6 +45,7 @@ export default function AppView() {
     } else if (symbol) {
       router.push('/company');
     } else {
+    
       router.push('/login');
       setCookie('phu', '', 0);
     }
@@ -52,13 +53,15 @@ export default function AppView() {
   const newGetCard = () => axios.post(`${OnRun}/dara/static`, { cookie: id, symbol })
   // eslint-disable-next-line no-unused-vars
   const { data, error, isLoading } = useQuery({
-        queryKey: ['newGetCard'],
-        queryFn: newGetCard,
-    });
-
+    queryKey: ['newGetCard'],
+    queryFn: newGetCard,
+    enabled: !!id && !!symbol, 
+  });
+  
+  
 
   useEffect(AccessCheck, [id, router, symbol]);
-  useEffect(newGetCard, [id, symbol]);
+  // useEffect(newGetCard, [id, symbol]);
 
   return (
     <Container maxWidth="xl">

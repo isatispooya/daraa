@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Skeleton from '@mui/material/Skeleton';
 import { alpha, useTheme } from '@mui/material/styles';
 import axios from "axios";
 import { getCookie, setCookie } from 'src/api/cookie';
@@ -26,16 +26,20 @@ export default function LoginView() {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
   const [isChecking, setIsChecking] = useState(true); // برای نمایش پیام در حال بررسی
+  const [loadingCaptcha, setLoadingCaptcha] = useState(true); // For loading state of captcha
 
   const getCaptcha = () => {
+    setLoadingCaptcha(true);
     axios
       .post(`${OnRun}/captcha`)
       .then((response) => {
         setEncrypted_response(response.data.encrypted_response);
         setCaptchaImage(response.data.image);
+        setLoadingCaptcha(false);
       })
       .catch((err) => {
         console.log("error captcha", err);
+        setLoadingCaptcha(false);
       });
   };
 
@@ -86,7 +90,7 @@ export default function LoginView() {
 
   const id = getCookie("phu");
   const AccessCheck = () => {
-    setIsChecking(true)
+    setIsChecking(true);
     if (id) {
       axios({
         method: "POST",
@@ -98,8 +102,7 @@ export default function LoginView() {
         }
       });
     }
-    setIsChecking(false)
-
+    setIsChecking(false);
   };
 
   useEffect(getCaptcha, []);
@@ -109,49 +112,40 @@ export default function LoginView() {
     <>
       <Stack spacing={3} sx={{ mb: 3 }}>
         <TextField value={nationalCode} onChange={(e) => setNationalCode(e.target.value)} label="شماره ملی" />
-        {
-          step === 1 ?
-            <>
-              <TextField value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value)} label="کپچا" />
-              <Button onClick={getCaptcha}>
-                <img src={`data:image/png;base64,${captchaImage}`} alt='captcha' />
-              </Button>
-              <Box sx={{ mb: 3 }} />
-            </>
-            :
-            <TextField value={otp} onChange={(e) => setOtp(e.target.value)} label="کد تایید" />
-        }
+        {step === 1 ? (
+          <>
+            <TextField value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value)} label="کپچا" />
+            <Button onClick={getCaptcha}>
+              {loadingCaptcha ? (
+                <Skeleton variant="rectangular" width={150} height={50} />
+              ) : (
+                <img src={`data:image/png;base64,${captchaImage}`} alt="captcha" />
+              )}
+            </Button>
+            <Box sx={{ mb: 3 }} />
+          </>
+        ) : (
+          <TextField value={otp} onChange={(e) => setOtp(e.target.value)} label="کد تایید" />
+        )}
       </Stack>
 
-      {
-        step === 1 ?
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            color="inherit"
-            onClick={applyNationalCode}
-          >
-            تایید
-          </LoadingButton>
-          :
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            color="inherit"
-            onClick={handleCode}
-          >
-            تایید
-          </LoadingButton>
-      }
+      <LoadingButton
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        color="inherit"
+        onClick={step === 1 ? applyNationalCode : handleCode}
+      >
+        تایید
+      </LoadingButton>
     </>
   );
+
   if (isChecking) {
-    return <div>در حال بررسی دسترسی...</div>; 
+    return <div>در حال بررسی دسترسی...</div>;
   }
+
   return (
     <Box
       sx={{
@@ -169,14 +163,21 @@ export default function LoginView() {
             p: 5,
             width: 1,
             maxWidth: 420,
-    
           }}
         >
           <Typography
-            sx={{ display: 'flex', flexDirection: 'column',gap:"3", alignItems: 'center',marginBottom: 3,}}>
-
-            <Typography sx={{ marginBottom: 2 }} variant="h">درگاه سهامداران</Typography>
-            <Typography variant="h">  گروه مالی و سرمایه گذاری ایساتیس پویا</Typography>
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 3,
+              alignItems: 'center',
+              marginBottom: 3,
+            }}
+          >
+            <Typography sx={{ marginBottom: 2 }} variant="h">
+              درگاه سهامداران
+            </Typography>
+            <Typography variant="h">گروه مالی و سرمایه گذاری ایساتیس پویا</Typography>
           </Typography>
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>

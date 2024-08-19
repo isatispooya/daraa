@@ -25,6 +25,7 @@ export default function LoginView() {
   const [encrypted_response, setEncrypted_response] = useState(null);
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
+  const [isChecking, setIsChecking] = useState(true); // برای نمایش پیام در حال بررسی
 
   const getCaptcha = () => {
     axios
@@ -85,6 +86,7 @@ export default function LoginView() {
 
   const id = getCookie("phu");
   const AccessCheck = () => {
+    setIsChecking(true)
     if (id) {
       axios({
         method: "POST",
@@ -96,6 +98,8 @@ export default function LoginView() {
         }
       });
     }
+    setIsChecking(false)
+
   };
 
   useEffect(getCaptcha, []);
@@ -145,7 +149,9 @@ export default function LoginView() {
       }
     </>
   );
-
+  if (isChecking) {
+    return <div>در حال بررسی دسترسی...</div>; 
+  }
   return (
     <Box
       sx={{

@@ -23,7 +23,7 @@ const navConfig = [
     icon: icon('ic_sheet'),
   },
   {
-    title: 'گردش معاملات',
+    title: 'گردش ',
     path: '/trades',
     icon: icon('ic_trade'),
   },

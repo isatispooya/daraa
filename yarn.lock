@@ -3179,6 +3179,11 @@ synckit@^0.8.5:
     "@pkgr/utils" "^2.3.1"
     tslib "^2.5.0"
 
+tabulator-tables@^6.2.5:
+  version "6.2.5"
+  resolved "https://registry.npmjs.org/tabulator-tables/-/tabulator-tables-6.2.5.tgz"
+  integrity sha512-f/TI78hV+GNoBefdqQ4q5RXbP+vJkvwSwt7sqeCTriAchNXax3ekcT1GG3i2J+8mhz6dHg0PFKyCYfmMW45HEg==
+
 terser@^5.4.0:
   version "5.15.1"
   resolved "https://registry.npmjs.org/terser/-/terser-5.15.1.tgz"

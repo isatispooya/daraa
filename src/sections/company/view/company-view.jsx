@@ -26,6 +26,7 @@ export default function CompanyView() {
   const router = useRouter();
 
   const AccessCheck = () => {
+    
     if (id) {
       axios({
         method: 'POST',
@@ -37,6 +38,7 @@ export default function CompanyView() {
         } else {
           router.push('/login');
           setCookie('phu', '', 0);
+          
         }
       });
     }
@@ -45,7 +47,6 @@ export default function CompanyView() {
   const exit = () => {
     setCookie('phn', '', -1); 
     router.push('/login');
-    console.log('Logged out, id:', id);
   };
   
   
@@ -55,13 +56,12 @@ export default function CompanyView() {
   const newConpany=() => axios.post(`${OnRun}/dara/getcompany`, { cookie: id })
 
   
-    const { data, error, isLoading } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['newConpany'],
         queryFn: newConpany,
     });
-  console.log('====================================');
-  console.log(data, error, isLoading);
-  console.log('====================================');
+
+
 
   const Filter = () => {
     if (data) {
@@ -112,6 +112,7 @@ export default function CompanyView() {
           alignItems="center"
           justifyContent="space-between"
         >
+
           <PostSearch setSearche={setSearche} />
         </Stack>
       ) : null}

@@ -42,8 +42,9 @@ export default function AppView() {
           setCookie('phu', '', 0);
         }
       });
-    } else if (symbol) {
-      router.push('/company');
+     if (symbol) {
+      router.push('/');
+     }
     } else {
     
       router.push('/login');

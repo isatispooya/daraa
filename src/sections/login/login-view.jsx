@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Skeleton from '@mui/material/Skeleton';
 import { alpha, useTheme } from '@mui/material/styles';
-import axios from "axios";
+import axios from 'axios';
 import { getCookie, setCookie } from 'src/api/cookie';
 import { useRouter } from 'src/routes/hooks';
 import { bgGradient } from 'src/theme/css';
@@ -38,27 +38,30 @@ export default function LoginView() {
         setLoadingCaptcha(false);
       })
       .catch((err) => {
-        console.log("error captcha", err);
+        console.log('error captcha', err);
         setLoadingCaptcha(false);
       });
   };
 
   const applyNationalCode = () => {
     if (captchaInput.length === 0) {
-      toast.warning("کد تصویر صحیح نیست");
+      toast.warning('کد تصویر صحیح نیست');
     } else if (nationalCode.length !== 10) {
-      toast.warning("مقدار کد ملی را به صورت صحیح وارد کنید");
+      toast.warning('مقدار کد ملی را به صورت صحیح وارد کنید');
     } else {
       axios({
-        method: "POST",
+        method: 'POST',
         url: `${OnRun}/dara/applynationalcode`,
-        data: { UserInput: { captcha: captchaInput, nationalCode }, captchaCode: encrypted_response },
+        data: {
+          UserInput: { captcha: captchaInput, nationalCode },
+          captchaCode: encrypted_response,
+        },
       }).then((response) => {
         if (response.data.replay) {
-          if (response.data.status === "NotFund") {
-            toast.warning("متاسفانه کد ملی وارد شده یافت نشد");
-          } else if (response.data.status === "RegisterDara") {
-            toast.warning("متاسفانه کد ملی وارد شده یافت نشد");
+          if (response.data.status === 'NotFund') {
+            toast.warning('متاسفانه کد ملی وارد شده یافت نشد');
+          } else if (response.data.status === 'RegisterDara') {
+            toast.warning('متاسفانه کد ملی وارد شده یافت نشد');
           } else {
             setStep(2);
           }
@@ -71,16 +74,16 @@ export default function LoginView() {
 
   const handleCode = () => {
     if (otp.length !== 5) {
-      toast.warning("کد صحیح نیست");
+      toast.warning('کد صحیح نیست');
     } else {
       axios({
-        method: "POST",
+        method: 'POST',
         url: `${OnRun}/dara/coderegistered`,
         data: { nationalCode, Code: otp },
       }).then((response) => {
         if (response.data.replay) {
-          setCookie("phn", response.data.cookie, 1);
-          router.push("/company");
+          setCookie('phn', response.data.cookie, 1);
+          router.push('/company');
         } else {
           toast.warning(response.data.msg);
         }
@@ -88,17 +91,20 @@ export default function LoginView() {
     }
   };
 
-  const id = getCookie("phu");
+  const id = getCookie('phu');
   const AccessCheck = () => {
     setIsChecking(true);
     if (id) {
       axios({
-        method: "POST",
+        method: 'POST',
         url: `${OnRun}/dara/access`,
         data: { cookie: id },
       }).then((response) => {
         if (response.data.replay) {
-          router.push("/company");
+          router.push('/company');
+        } else {
+          router.push('/login');
+          setCookie('phu', '', 0);
         }
       });
     }
@@ -111,10 +117,18 @@ export default function LoginView() {
   const renderForm = (
     <>
       <Stack spacing={3} sx={{ mb: 3 }}>
-        <TextField value={nationalCode} onChange={(e) => setNationalCode(e.target.value)} label="شماره ملی" />
+        <TextField
+          value={nationalCode}
+          onChange={(e) => setNationalCode(e.target.value)}
+          label="شماره ملی"
+        />
         {step === 1 ? (
           <>
-            <TextField value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value)} label="کپچا" />
+            <TextField
+              value={captchaInput}
+              onChange={(e) => setCaptchaInput(e.target.value)}
+              label="کپچا"
+            />
             <Button onClick={getCaptcha}>
               {loadingCaptcha ? (
                 <Skeleton variant="rectangular" width={150} height={50} />

@@ -33,9 +33,8 @@ export default function ProjectView() {
           <Table sx={{ minWidth: 800, paddingX: '50', textAlign: 'start' }}>
             <TableHead>
               <TableRow>
-                <TableCell align="right">عنوان</TableCell>
-                <TableCell align="right">تاریخ</TableCell>
-                <TableCell align="right">فایل</TableCell>
+                <TableCell align="right">عنوان گزارش</TableCell>
+                <TableCell align="right">دانلود</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -45,9 +44,7 @@ export default function ProjectView() {
                       <TableCell component="th" scope="row" sx={{ textAlign: 'start' }}>
                         {item.Title}
                       </TableCell>
-                      <TableCell component="th" scope="row" sx={{ textAlign: 'start' }}>
-                        {item.Date}
-                      </TableCell>
+                     
                       <TableCell component="th" scope="row" sx={{ textAlign: 'start' }}>
                         <a target="_blank" href={item.File} rel="noreferrer">
                           PDF

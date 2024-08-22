@@ -43,10 +43,13 @@ export default function CompanyView() {
   };
 
   const exit = () => {
+    setCookie('phn', '', -1); 
     router.push('/login');
-    setCookie('phu', '', 0);
+    console.log('Logged out, id:', id);
   };
-
+  
+  
+  
 
   
   const newConpany=() => axios.post(`${OnRun}/dara/getcompany`, { cookie: id })

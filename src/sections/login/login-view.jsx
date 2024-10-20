@@ -26,20 +26,25 @@ export default function LoginView() {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
   const [isChecking, setIsChecking] = useState(true);
-  const [loadingCaptcha, setLoadingCaptcha] = useState(true); 
+  const [loadingCaptcha, setLoadingCaptcha] = useState(true);
+  const [loading, setLoading] = useState(false);
+  console.log(loading);
 
   const getCaptcha = () => {
     setLoadingCaptcha(true);
+    setLoading(true);
     axios
       .post(`${OnRun}/captcha`)
       .then((response) => {
         setEncrypted_response(response.data.encrypted_response);
         setCaptchaImage(response.data.image);
         setLoadingCaptcha(false);
+        setLoading(false);
       })
       .catch((err) => {
         console.log('error captcha', err);
         setLoadingCaptcha(false);
+        setLoading(false);
       });
   };
 
@@ -49,6 +54,7 @@ export default function LoginView() {
     } else if (nationalCode.length !== 10) {
       toast.warning('مقدار کد ملی را به صورت صحیح وارد کنید');
     } else {
+      setLoading(true);
       axios({
         method: 'POST',
         url: `${OnRun}/dara/applynationalcode`,
@@ -56,38 +62,50 @@ export default function LoginView() {
           UserInput: { captcha: captchaInput, nationalCode },
           captchaCode: encrypted_response,
         },
-      }).then((response) => {
-        if (response.data.replay) {
-          if (response.data.status === 'NotFund') {
-            toast.warning('متاسفانه کد ملی وارد شده یافت نشد');
-          } else if (response.data.status === 'RegisterDara') {
-            toast.warning('متاسفانه کد ملی وارد شده یافت نشد');
+      })
+        .then((response) => {
+          setLoading(false);
+
+          if (response.data.replay) {
+            if (response.data.status === 'sejam') {
+              setStep(3);
+              toast.success('کد تایید از طریق سجام ارسال شد');
+            } else {
+              setStep(2);
+              toast.success('کد تایید ارسال شد');
+            }
           } else {
-            setStep(2);
+            toast.warning(response.data.msg);
           }
-        } else {
-          toast.warning(response.data.msg);
-        }
-      });
+        })
+        .catch((error) => {
+          setLoading(false);
+        });
     }
   };
 
   const handleCode = () => {
-    if (otp.length !== 5) {
-      toast.warning('کد صحیح نیست');
+    if (!otp.length) {
+      toast.warning('کد0 صحیح نیست');
     } else {
+      setLoading(true);
       axios({
         method: 'POST',
         url: `${OnRun}/dara/coderegistered`,
-        data: { nationalCode, Code: otp },
-      }).then((response) => {
-        if (response.data.replay) {
-          setCookie('phn', response.data.cookie, 1);
-          router.push('/company');
-        } else {
-          toast.warning(response.data.msg);
-        }
-      });
+        data: { nationalCode, Code: otp, sejam: step === 3 },
+      })
+        .then((response) => {
+          if (response.data.replay) {
+            setCookie('phn', response.data.cookie, 1);
+            router.push('/company');
+          } else {
+            toast.warning(response.data.msg);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+        });
     }
   };
 
@@ -144,6 +162,7 @@ export default function LoginView() {
       </Stack>
 
       <LoadingButton
+        disabled={loading}
         fullWidth
         size="large"
         type="submit"

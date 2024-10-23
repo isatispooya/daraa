@@ -40,6 +40,7 @@ export default function CompanyView() {
   };
 
   const AccessCheck = () => {
+    
     if (id) {
       axios({
         method: 'POST',
@@ -51,22 +52,41 @@ export default function CompanyView() {
         } else {
           router.push('/login');
           setCookie('phu', '', 0);
+          
         }
       });
     }
   };
 
+  
+  const clearCache = () => {
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach((name) => {
+          caches.delete(name);
+        });
+      });
+    }
+
+    // پاک کردن کش مرورگر با استفاده از reload
+    window.location.reload(true); // بارگذاری مجدد با نادیده گرفتن کش
+  };
+
   const exit = () => {
-    setCookie('phn', '', -1);
+    clearCache()
+    setCookie('phn', '', -1); 
     router.push('/login');
   };
 
   const newConpany = () => axios.post(`${OnRun}/dara/getcompany`, { cookie: id });
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['newConpany'],
-    queryFn: newConpany,
-  });
+  
+    const { data, isLoading } = useQuery({
+        queryKey: ['newConpany'],
+        queryFn: newConpany,
+    });
+
+
 
   const Filter = () => {
     if (data) {
@@ -119,6 +139,7 @@ export default function CompanyView() {
           alignItems="center"
           justifyContent="space-between"
         >
+
           <PostSearch setSearche={setSearche} />
         </Stack>
       ) : null}

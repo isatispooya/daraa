@@ -29,11 +29,15 @@ const CompanyCard = ({
   // console.log('CompanyCard', CompanyCard);
 
   const ToDashboard = () => {
+    
+    
     if (amount >= 0) {
+      console.log(symbol);
       setCookie('sym', symbol, 1);
       router.push('/');
     }
   };
+  
 
   return (
     <Container sx={{ position: 'relative', paddingBottom: 4 }}>
@@ -51,7 +55,7 @@ const CompanyCard = ({
           transform: 'translateX(-50%)',
         }}
       />
-      <Card sx={{ minWidth: 280, height: 420, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      <Card sx={{ minWidth: 280, height: 380, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <CardContent sx={{ marginTop: 5 }}>
           <Typography variant="h4" component="h2">
             {name}
@@ -77,7 +81,7 @@ const CompanyCard = ({
               secondary={Math.floor(allStockCompany).toLocaleString()}
             />
           </ListItem>
-          <ListItem sx={{ mt: -1, textAlign: 'start' }}>
+          {/* <ListItem sx={{ mt: -1, textAlign: 'start' }}>
             <ListItemText
               sx={{ ml: 1 }}
               primary={
@@ -93,7 +97,7 @@ const CompanyCard = ({
                 </Typography>
               }
             />
-          </ListItem>
+          </ListItem> */}
         </CardContent>
         <CardActions sx={{ p: 0 }}>
           <Button

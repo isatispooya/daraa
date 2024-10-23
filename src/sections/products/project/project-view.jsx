@@ -33,9 +33,9 @@ export default function ProjectView() {
           <Table sx={{ minWidth: 800, paddingX: '50', textAlign: 'start' }}>
             <TableHead>
               <TableRow>
-                <TableCell align="right">عنوان</TableCell>
-                <TableCell align="right">تاریخ</TableCell>
-                <TableCell align="right">فایل</TableCell>
+                <TableCell align="right" > عنوان گزارش </TableCell>
+               
+                <TableCell align="right">دانلود</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

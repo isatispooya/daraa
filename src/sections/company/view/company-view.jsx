@@ -7,23 +7,37 @@ import { useEffect, useState } from 'react';
 import { getCookie, setCookie } from 'src/api/cookie';
 import { useRouter } from 'src/routes/hooks';
 import { OnRun } from 'src/api/OnRun';
+import SingleModal from 'src/components/popUp';
 import axios from 'axios';
+
 import { useQuery } from '@tanstack/react-query';
 import PostSearch from '../post-search';
 import CompanyCard from '../ComapnyCard';
 import CompanyCardSkeleton from '../ComapnyCardSkeleton';
-
-
-// ----------------------------------------------------------------------
+import Pic1 from './pic1.png';
+import Pic2 from './pic2.png';
 
 export default function CompanyView() {
   const [personal, setPersonal] = useState(null);
   const [Searche, setSearche] = useState('');
   const [companyFiltered, setCompanyFiltered] = useState('');
-
-
+  const [showPic1, setShowPic1] = useState(true);
+  const [showPic2, setShowPic2] = useState(false);
   const id = getCookie('phn');
+
   const router = useRouter();
+
+  useEffect(() => {
+    setShowPic1(true);
+  }, []);
+
+  const handleClosePic1 = () => {
+    setShowPic1(false);
+    setShowPic2(true);
+  };
+  const handleClosePic2 = () => {
+    setShowPic2(false);
+  };
 
   const AccessCheck = () => {
     if (id) {
@@ -43,25 +57,16 @@ export default function CompanyView() {
   };
 
   const exit = () => {
-    setCookie('phn', '', -1); 
+    setCookie('phn', '', -1);
     router.push('/login');
-    console.log('Logged out, id:', id);
   };
-  
-  
-  
 
-  
-  const newConpany=() => axios.post(`${OnRun}/dara/getcompany`, { cookie: id })
+  const newConpany = () => axios.post(`${OnRun}/dara/getcompany`, { cookie: id });
 
-  
-    const { data, error, isLoading } = useQuery({
-        queryKey: ['newConpany'],
-        queryFn: newConpany,
-    });
-  console.log('====================================');
-  console.log(data, error, isLoading);
-  console.log('====================================');
+  const { data, isLoading } = useQuery({
+    queryKey: ['newConpany'],
+    queryFn: newConpany,
+  });
 
   const Filter = () => {
     if (data) {
@@ -70,13 +75,10 @@ export default function CompanyView() {
   };
 
   useEffect(AccessCheck, [id, router]);
-
   useEffect(Filter, [Searche, data]);
 
   return (
-    
-      <Container>
-
+    <Container>
       <Stack
         direction="row"
         alignItems="center"
@@ -85,19 +87,24 @@ export default function CompanyView() {
         sx={{ marginTop: 5, fontFamily: 'IranSans', maxWidth: '100%' }}
       >
         {personal ? (
-          <Typography sx={{ display: 'flex' }} color="#1a237e" variant="h6">
+         
+            <Typography sx={{ display: 'flex' }} color="#1a237e" variant="h6">
               سهامدار محترم {'  '}
-            <Typography variant="h6" color="#283593" fontSize={35} fontStyle="bold" sx={{ px: 1 }}>
-              {'  '}
-              <Typography variant="h6">
-                {personal['نام و نام خانوادگی']}
+              <Typography
+                variant="h6"
+                color="#283593"
+                fontSize={35}
+                fontStyle="bold"
+                sx={{ px: 1 }}
+              >
+                {'  '}
+                <Typography variant="h6">{personal['نام و نام خانوادگی']}</Typography>
               </Typography>
-              
+              {'  '}
+              به پنل سهامداری خود خوش‌آمدید.
             </Typography>
-            {'  '}
-            به پنل سهامداری خود
-            خوش‌آمدید.
-          </Typography>
+            
+          
         ) : null}
 
         <Button onClick={exit} variant="contained" color="inherit">
@@ -115,6 +122,17 @@ export default function CompanyView() {
           <PostSearch setSearche={setSearche} />
         </Stack>
       ) : null}
+      <SingleModal picture={Pic1} open={showPic1} handleClose={handleClosePic1} />
+      {
+        personal && personal['کد ملی'] ? (
+          <SingleModal
+            picture={Pic2}
+            open={showPic2}
+            handleClose={handleClosePic2}
+            nationalID={personal['کد ملی']}
+          />
+        ) : null 
+      }
 
       <Grid container spacing={2} sx={{ marginTop: 4 }}>
         {companyFiltered ? (
@@ -198,6 +216,5 @@ export default function CompanyView() {
         )}
       </Grid>
     </Container>
-  
   );
 }

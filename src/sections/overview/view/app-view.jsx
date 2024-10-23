@@ -1,10 +1,6 @@
-// import { faker } from '@faker-js/faker';
-
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-
-// import Iconify from 'src/components/iconify';
 import { getCookie, setCookie } from 'src/api/cookie';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
@@ -13,21 +9,11 @@ import { useRouter } from 'src/routes/hooks';
 import { useQuery } from '@tanstack/react-query';
 import AppWidgetSummary from '../app-widget-summary';
 
-// import AppTasks from '../app-tasks';
-// import AppNewsUpdate from '../app-news-update';
-// import AppOrderTimeline from '../app-order-timeline';
-// import AppCurrentVisits from '../app-current-visits';
-// import AppWebsiteVisits from '../app-website-visits';
-// import AppTrafficBySite from '../app-traffic-by-site';
-// import AppCurrentSubject from '../app-current-subject';
-// import AppConversionRates from '../app-conversion-rates';
-
-// ----------------------------------------------------------------------
 
 export default function AppView() {
   const id = getCookie('phn');
   const symbol = getCookie('sym');
- 
+
   const router = useRouter();
 
   const AccessCheck = () => {
@@ -45,23 +31,19 @@ export default function AppView() {
     } else if (symbol) {
       router.push('/company');
     } else {
-    
       router.push('/login');
       setCookie('phu', '', 0);
     }
   };
-  const newGetCard = () => axios.post(`${OnRun}/dara/static`, { cookie: id, symbol })
+  const newGetCard = () => axios.post(`${OnRun}/dara/static`, { cookie: id, symbol });
   // eslint-disable-next-line no-unused-vars
   const { data, error, isLoading } = useQuery({
     queryKey: ['newGetCard'],
     queryFn: newGetCard,
-    enabled: !!id && !!symbol, 
+    enabled: !!id && !!symbol,
   });
-  
-  
 
   useEffect(AccessCheck, [id, router, symbol]);
-  // useEffect(newGetCard, [id, symbol]);
 
   return (
     <Container maxWidth="xl">

@@ -44,6 +44,8 @@ export default function Nav({ openNav, onCloseNav }) {
   //   }
   // };
 
+
+
   const AccessCheck = () => {
     if (id) {
       axios({
@@ -62,16 +64,15 @@ export default function Nav({ openNav, onCloseNav }) {
   };
 
   const exit = () => {
+    setCookie('phn', '', -1); 
     router.push('/login');
-    setCookie('phu', '', 0);
+    console.log('Logged out, id:', id);
   };
-
-  // const icon = (name) => (
-  //   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
-  // );
-
+  
   const pathname = usePathname();
   const upLg = useResponsive('up', 'lg');
+
+
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -127,10 +128,10 @@ export default function Nav({ openNav, onCloseNav }) {
           color: 'text.secondary',
           textTransform: 'capitalize',
           fontWeight: 'fontWeightMedium',
-          // color: 'primary.main',
+          
           '&:hover': {
             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05),
-            // bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+            
           },
         }}
       >

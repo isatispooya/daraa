@@ -27,24 +27,18 @@ export default function Nav({ openNav, onCloseNav }) {
   const router = useRouter();
   const cookie = getCookie('sym');
 
-  // const AccessCheck = () => {
-  //   if (id) {
-  //     axios({
-  //       method: 'POST',
-  //       url: `${OnRun}/dara/access`,
-  //       data: { cookie: id },
-  //     }).then((response) => {
-  //       if (response.data.replay) {
-  //         setPersonal(response.data);
-  //       } else {
-  //         router.push('/login');
-  //         setCookie('phu', '', 0);
-  //       }
-  //     });
-  //   }
-  // };
+  const clearCache = () => {
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach((name) => {
+          caches.delete(name);
+        });
+      });
+    }
 
-
+    // پاک کردن کش مرورگر با استفاده از reload
+    window.location.reload(true); // بارگذاری مجدد با نادیده گرفتن کش
+  };
 
   const AccessCheck = () => {
     if (id) {
@@ -64,14 +58,10 @@ export default function Nav({ openNav, onCloseNav }) {
   };
 
   const exit = () => {
-    setCookie('phn', '', -1); 
+    setCookie('phn', '', -1);
+    clearCache()
     router.push('/login');
-    console.log('Logged out, id:', id);
   };
-  
-
-
-  
 
   // const icon = (name) => (
   //   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />

@@ -28,7 +28,6 @@ export default function LoginView() {
   const [isChecking, setIsChecking] = useState(true);
   const [loadingCaptcha, setLoadingCaptcha] = useState(true);
   const [loading, setLoading] = useState(false);
-  console.log(loading);
 
   const getCaptcha = () => {
     setLoadingCaptcha(true);
@@ -59,7 +58,7 @@ export default function LoginView() {
         method: 'POST',
         url: `${OnRun}/dara/applynationalcode`,
         data: {
-          UserInput: { captcha: captchaInput, nationalCode },
+          UserInput: { captcha: captchaInput, nationalCode,},
           captchaCode: encrypted_response,
         },
       })
@@ -145,6 +144,7 @@ export default function LoginView() {
             <TextField
               value={captchaInput}
               onChange={(e) => setCaptchaInput(e.target.value)}
+              autoComplete={false}
               label="کپچا"
             />
             <Button onClick={getCaptcha}>

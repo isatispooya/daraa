@@ -44,7 +44,22 @@ export default function CompanyView() {
     }
   };
 
+  
+  const clearCache = () => {
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach((name) => {
+          caches.delete(name);
+        });
+      });
+    }
+
+    // پاک کردن کش مرورگر با استفاده از reload
+    window.location.reload(true); // بارگذاری مجدد با نادیده گرفتن کش
+  };
+
   const exit = () => {
+    clearCache()
     setCookie('phn', '', -1); 
     router.push('/login');
   };
